@@ -1,14 +1,11 @@
-
 /*
 var http = require('http');
 var server = http.createServer(function(request, response){
 	response.writeHead(200, {'Content-Type' : 'text/plain'});
 	response.end('Hello World\n');
 });
-
 //listen port
 server.listen(9999);
-
 console.log('server running.'); 
 */
 
@@ -38,13 +35,15 @@ server.on('connection', function(socket){
 	//when client has sended 'data'
 	socket.on('data', function(chunk){
 		
-		var message = chunk.toString();
+		//chunk.replace(/\r\n|\n|\r/g,"");
+		var message = chunk.toString().trim();
 		//print string
 		console.log(message);
 
 		//handle message 
-		if(message == "exit\n"){
+		if(message == "exit"){
 			//destroy the socket if client write "exit".
+			//console.log('in exit');
 			socket.destroy();
 		}else{
 			//send back echo message to client.
@@ -59,7 +58,10 @@ server.on('connection', function(socket){
 		socket.write("disconnected");
 		//console.log(disconnected);
 	});
+	
+	socket.on('error', function(err) {
+	   console.log("[ERROR]: "+err)
+	});
 });
 
 //var socket = new net.Socket();
-
